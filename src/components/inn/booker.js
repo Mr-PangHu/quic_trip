@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 import moment from "moment";
 import { useState } from "react";
+import axios from "axios";
 const { RangePicker } = DatePicker;
 
 export default function Booker() {
@@ -27,6 +28,10 @@ export default function Booker() {
   const [roomNum, setRoomNum] = useState(1);
   // 存放几晚
   const [night, setNight] = useState(1);
+  // 入住时间
+  const [checkinTime, setcheckinTime] = useState("");
+  // 离开时间
+  const [checkoutTime, setcheckoutTime] = useState("");
   // 日期渲染函数
   const rendCells = () => {
     return "?";
@@ -35,6 +40,8 @@ export default function Booker() {
   const getNights = (value) => {
     // if (value) console.log(value[0].unix(), value[1].unix());
     if (value)
+      setcheckinTime(value[0].format("YYYY-MM-DD"))
+      setcheckoutTime(value[1].format("YYYY-MM-DD"))
       setNight(
         moment(value[1].format("YYYY-MM-DD")).diff(
           value[0].format("YYYY-MM-DD"),
@@ -63,6 +70,42 @@ export default function Booker() {
   ];
   // 地点的选择
   const [position, setPosition] = useState("");
+
+  // 星级选择
+  const [level, setLevel] = useState("");
+
+  // 备注
+  const [description, setDescription] = useState("");
+
+  const showPrice = async (e) => {
+    // const { data } = await axios.get("http://localhost:3000/api/mock/showPrice")
+    // const level = e
+    // level.forEach(item => {
+    //   const hotel = data.hotel.filter(h => h.name == item[0])
+    //   console.log(hotel[0].price)
+    // })
+    
+    axios.get("http://localhost:80/dbapi/hoteladd", {
+      params: {
+        hotelName: position[2],
+        hotelLevel: level[0][0],
+        checkinTime: checkinTime,
+        checkoutTime: checkoutTime,
+        roomNumber: roomNum,
+        adultNumber: adult,
+        childNumber: child,
+        description: description
+      }
+    }).then(res => {
+      console.log(res.data)
+    }).catch(err => {
+      console.log('操作失败' + err)
+    })
+    console.log(position[2],level[0][0],checkinTime,checkoutTime,roomNum,adult,child,description)
+  }
+
+
+
   return (
     <div>
       <div className="inn-box">
@@ -220,6 +263,7 @@ export default function Booker() {
                   multiple
                   maxTagCount="responsive"
                   bordered={false}
+                  onChange={setLevel} //////////////////
                 />
               </div>
               {/* 关键词 */}
@@ -229,6 +273,7 @@ export default function Booker() {
                   style={{ height: "3rem", borderRadius: "0" }}
                   bordered={false}
                   placeholder="机场/火车站/酒店名称"
+                  onChange={e => setDescription(e.target.value)} ///////////////
                 ></Input>
               </div>
             </Space.Compact>
@@ -237,6 +282,7 @@ export default function Booker() {
               size="large"
               style={{ flex: "2", fontSize: "1.5rem", height: "5rem" }}
               className="inn-search"
+              onClick={showPrice} /////////////////////////
             >
               预订
             </Button>

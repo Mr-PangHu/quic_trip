@@ -3,6 +3,12 @@ const mock = {
     { id: 1, name: "John Doe" },
     { id: 2, name: "Jane Smith" },
   ],
+  hotel: [
+    { id: 1, name: "二星（钻）及以下", price: 111},
+    { id: 2, name: "三星（钻）", price: 222},
+    { id: 3, name: "四星（钻）", price: 333},
+    { id: 4, name: "五星（钻）", price: 444},
+  ]
 };
 
 var mockData = mock;
@@ -31,5 +37,7 @@ export default function handler(req, res) {
     res.status(200).json(mockData);
   } else if (op.operate == "show") {
     res.status(200).json(mockData);
+  } else if (op.operate == "showPrice") {
+    res.status(200).json(mockData)
   }
 }
