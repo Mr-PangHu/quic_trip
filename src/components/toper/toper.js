@@ -5,6 +5,9 @@ import { Dropdown, Space, Popover } from "antd";
 import { QRCode } from "antd";
 import { useState } from "react";
 import Login from "./login";
+import dynamic from 'next/dynamic';
+const ChatPage = dynamic(() => import('../chat'), { ssr: false });
+
 const { Search } = Input;
 
 const IconFont = createFromIconfontCN({
@@ -46,8 +49,11 @@ export default function Toper() {
     setIsModalOpen(false);
   };
 
+  const [isShow,setisShow] = useState(false)
+
   return (
     <div className="wrapper">
+      {isShow ? <ChatPage /> : null}
       <img src="./logo.png" className="logo" />
       {contextHolder}
       <Search
@@ -111,6 +117,7 @@ export default function Toper() {
         }}
       >
         <Popover
+          onClick={() => setisShow(!isShow)}
           content={
             <div>
               <p>客服机器人小Q</p>
