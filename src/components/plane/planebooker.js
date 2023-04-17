@@ -1,9 +1,19 @@
-import { Tabs, ConfigProvider, Button } from "antd";
+import { Tabs, ConfigProvider, Button, DatePicker } from "antd";
 import { Carousel } from "antd";
-import { Radio, Checkbox, Select } from "antd";
+import { Radio, Checkbox, Select, Popover, InputNumber } from "antd";
 import { CheckOutlined, SwapOutlined } from "@ant-design/icons";
+import { createFromIconfontCN } from "@ant-design/icons";
 import { use, useState } from "react";
 import CityPicker from "../common/CityPicker";
+import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/zh-cn";
+import locale from "antd/locale/zh_CN";
+import AirBanner from "./smallbanner";
+const { RangePicker } = DatePicker;
+const IconFont = createFromIconfontCN({
+  scriptUrl: "//at.alicdn.com/t/c/font_4006149_h0exp2flkq5.js",
+});
 
 export default function PlaneBooker() {
   // 设置出发和到达城市
@@ -14,6 +24,10 @@ export default function PlaneBooker() {
   const typeChange = (e) => {
     setType(e);
   };
+  // 人数
+  const [adult, setAdult] = useState(1);
+  const [child, setChild] = useState(0);
+  const [enfant, setEnfant] = useState(0);
   // 交换两个城市
   const handelExchange = () => {
     // console.log(start, end);
@@ -21,6 +35,20 @@ export default function PlaneBooker() {
     setStart([...end]);
     setEnd([...start]);
   };
+  // 差异天数
+  const [day, setDay] = useState(1);
+  // 获得差异天数;
+  const getDays = (value) => {
+    // if (value) console.log(value[0].unix(), value[1].unix());
+    if (value)
+      setDay(
+        moment(value[1].format("YYYY-MM-DD")).diff(
+          value[0].format("YYYY-MM-DD"),
+          "days"
+        )
+      );
+  };
+
   return (
     <div>
       <ConfigProvider
@@ -70,6 +98,7 @@ export default function PlaneBooker() {
                         <Radio value={3}>多程（含缺口程）</Radio>
                       </Radio.Group>
                     </div>
+
                     {/* 下拉菜单 */}
                     <div>
                       <Checkbox>仅看直飞</Checkbox>
@@ -137,31 +166,182 @@ export default function PlaneBooker() {
                       />
                     </div>
                   </div>
-                  {/* 城市日期选择器组合 */}
-                  <div className="air-cities">
-                    <CityPicker
-                      setFunc={setStart}
-                      className="air-citypicker left"
-                      title="出发地"
-                      val={start}
-                    ></CityPicker>
+                  <div className="air-row-2">
+                    {/* 城市日期选择器组合 */}
+                    <div className="air-cities">
+                      <CityPicker
+                        setFunc={setStart}
+                        className="air-citypicker left"
+                        title="出发地"
+                        val={start}
+                      ></CityPicker>
 
-                    <CityPicker
-                      setFunc={setEnd}
-                      className="air-citypicker right"
-                      title="目的地"
-                      val={end}
-                    ></CityPicker>
-                    {/* 交换按钮 */}
-                    <Button
-                      className="air-change"
-                      type="circle"
-                      icon={<SwapOutlined></SwapOutlined>}
-                      onClick={(e) => {
-                        handelExchange();
-                      }}
-                    ></Button>
+                      <CityPicker
+                        setFunc={setEnd}
+                        className="air-citypicker right"
+                        title="目的地"
+                        val={end}
+                      ></CityPicker>
+                      {/* 交换按钮 */}
+                      <Button
+                        className="air-change"
+                        type="circle"
+                        icon={<SwapOutlined></SwapOutlined>}
+                        onClick={(e) => {
+                          handelExchange();
+                        }}
+                      ></Button>
+                    </div>
+                    {/* 日期选择器组合 */}
+                    <ConfigProvider locale={locale}>
+                      <RangePicker
+                        className="air-range"
+                        allowClear={true}
+                        defaultValue={[
+                          dayjs(
+                            moment().format("YYYY-MM-DD"),
+                            "YYYY年MM月DD日"
+                          ),
+                          dayjs(
+                            moment().add(1, "days").format("YYYY-MM-DD"),
+                            "YYYY年MM月DD日"
+                          ),
+                        ]}
+                        format={"MM月DD日"}
+                        placeholder={["出发日期", "返回日期"]}
+                        separator={<div className="air-seperator">{day}天</div>}
+                        onChange={getDays}
+                        // 禁用历史时间
+                        disabledDate={(current) => {
+                          return current < moment().startOf("day");
+                        }}
+                        suffixIcon={null}
+                      ></RangePicker>
+                    </ConfigProvider>
+                    {/* 人数选择 */}
+                    <div className="air-people">
+                      <p className="air-title">乘客类型</p>
+                      <Popover
+                        placement="bottom"
+                        content={
+                          <div>
+                            {/* 成人 */}
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                marginBottom: "0.5rem",
+                                padding: "0.2rem",
+                                paddingBottom: "0.5rem",
+                                borderBottom: "1px solid #ccc",
+                              }}
+                            >
+                              <div>
+                                <IconFont
+                                  type="icon-nanxing"
+                                  className="air-heads"
+                                ></IconFont>
+                                <span>
+                                  成人
+                                  <br />
+                                  （12岁及以上）：
+                                </span>
+                              </div>
+
+                              <InputNumber
+                                min={1}
+                                defaultValue={1}
+                                onChange={(e) => {
+                                  setAdult(e);
+                                }}
+                                style={{
+                                  borderRadius: "1rem",
+                                  overflow: "hidden",
+                                }}
+                              />
+                            </div>
+                            {/* 儿童 */}
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                marginBottom: "0.5rem",
+                                padding: "0.2rem",
+                                paddingBottom: "0.5rem",
+                                borderBottom: "1px solid #ccc",
+                              }}
+                            >
+                              <div>
+                                <IconFont
+                                  type="icon-ertong"
+                                  className="air-heads"
+                                ></IconFont>
+                                <span>
+                                  儿童
+                                  <br />
+                                  （2~12岁）：
+                                </span>
+                              </div>
+
+                              <InputNumber
+                                min={0}
+                                defaultValue={0}
+                                style={{
+                                  borderRadius: "1rem",
+                                  overflow: "hidden",
+                                }}
+                                onChange={(e) => {
+                                  setChild(e);
+                                }}
+                              />
+                            </div>
+                            {/* 婴儿 */}
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                padding: "0.2rem",
+                              }}
+                            >
+                              <div>
+                                <IconFont
+                                  type="icon-ertongpiao"
+                                  className="air-heads"
+                                ></IconFont>
+                                <span>
+                                  婴儿
+                                  <br />
+                                  （14天~2岁）：
+                                </span>
+                              </div>
+
+                              <InputNumber
+                                min={0}
+                                defaultValue={0}
+                                style={{
+                                  borderRadius: "1rem",
+                                  overflow: "hidden",
+                                }}
+                                onChange={(e) => {
+                                  setEnfant(e);
+                                }}
+                              />
+                            </div>
+                          </div>
+                        }
+                        trigger="click"
+                      >
+                        <Button type="text" className="air-people-but">
+                          {adult}成人 {child}儿童 {enfant}婴儿
+                        </Button>
+                      </Popover>
+                    </div>
                   </div>
+                  // 订购按钮
+                  <Button className="air-book">订购</Button>
                 </div>
               ),
             },
@@ -199,25 +379,7 @@ export default function PlaneBooker() {
           style={{ boxShadow: "0 0 15px rgba(0,0,0,0.1)" }}
         />
         {/* 小banner */}
-        <Carousel
-          className="air-small-banner"
-          autoplay={true}
-          autoplaySpeed={2000}
-          draggable={true}
-        >
-          <div>
-            <img src="https://dimg04.c-ctrip.com/images/0zg3e12000awvccxbC694.jpg" />
-          </div>
-          <div>
-            <img src="https://dimg04.c-ctrip.com/images/0zg3q12000aup39a9F63B.jpg" />
-          </div>
-          <div>
-            <img src="https://dimg04.c-ctrip.com/images/0zg2e12000awvcyo69393.jpg" />
-          </div>
-          <div>
-            <img src="https://dimg04.c-ctrip.com/images/0zg5n12000aup5jivD121.jpg" />
-          </div>
-        </Carousel>
+        <AirBanner></AirBanner>
       </ConfigProvider>
     </div>
   );

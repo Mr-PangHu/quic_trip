@@ -1,0 +1,184 @@
+.trip-wrapper {
+  margin: 0 auto;
+  width: 60%;
+  padding: 1rem 0;
+  margin-left: 22%;
+  min-height: 30rem;
+}
+
+.trip-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trip-top .ant-input-group {
+  width: 86% !important;
+  height: 3.5rem !important;
+  box-shadow: 0px 4px 16px 1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.trip-top .ant-input-group .ant-btn {
+  width: 8rem !important;
+  height: 3.5rem !important;
+  padding-left: 2.5rem !important;
+  font-size: 1.2rem !important;
+  background: linear-gradient(45deg, rgb(102, 0, 255), #9f1bfa);
+}
+
+.trip-my {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3.5rem;
+  font-size: 1rem;
+  box-shadow: 0px 4px 16px 1px rgba(0, 0, 0, 0.06);
+  border: none;
+}
+
+.trip-my:hover .homepage-button-arrow {
+  border-left-color: #9f1bfa;
+}
+
+.homepage-button-arrow {
+  display: inline-block;
+  margin-left: 5px;
+  border-left: 5px solid #333;
+  border-top: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  transition: all 0.3s;
+}
+
+.trip-top .ant-input-affix-wrapper {
+  border: 1px solid #9f1bfa !important;
+}
+
+.trip-search-icon {
+  font-size: 1rem;
+  color: #ccc;
+  margin-right: 0.5rem;
+}
+
+.trip-data {
+  display: flex;
+  background-color: #f2d8ff;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+}
+
+.trip-data .item {
+  flex: 1;
+  position: relative;
+  text-align: center;
+  height: 3.5rem;
+  line-height: 3.5rem;
+  transition: all 0.3s;
+  font-size: 1rem;
+  color: #333;
+}
+
+.trip-data .item::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  display: block;
+  height: 1rem;
+  width: 1px;
+  background-color: #deb3ff;
+  transform: translateY(-50%);
+  box-shadow: 0 0 5px #d28eff;
+}
+
+.trip-data .item:hover {
+  cursor: pointer;
+  color: #9f1bfa;
+}
+
+.trip-data .item:hover .homepage-button-arrow {
+  border-left-color: #9f1bfa;
+}
+
+.trip-share-head {
+  display: flex;
+  margin-top: 1rem;
+  align-items: center;
+}
+.trip-share-head h3 {
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+.trip-share-head a {
+  color: #aaa;
+  margin-top: -0.5rem;
+}
+.trip-share-item .img {
+  width: 50%;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
+  margin-left: -0.5rem;
+  cursor: pointer;
+}
+.trip-share-item {
+  display: flex;
+}
+
+.trip-share-item a {
+  display: block;
+  font-size: 1.1rem;
+}
+
+.trip-share-item .user {
+  display: flex;
+  align-items: center;
+}
+
+.trip-share-item .avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 100rem;
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  /* background-color: red; */
+}
+
+.trip-share-item-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.trip-share-item-right .detail {
+  margin-top: 1rem;
+  color: #999;
+}
+
+.trip-share-item .bottom {
+  display: flex;
+}
+
+.trip-share-item .bottom div {
+  margin-right: 1rem;
+  color: #999;
+}
+
+.trip-share-item .show {
+  position: relative;
+}
+
+.trip-share-item .jinghua {
+  position: absolute;
+  width: 4rem;
+  right: -20rem;
+  top: 2rem;
+}
+
+.trip-share-item .toutiao {
+  width: 4rem;
+  position: absolute;
+  right: -15rem;
+  top: 2rem;
+}

@@ -3,7 +3,7 @@
   align-items: center;
   width: 65%;
   margin: 0 auto;
-  margin-left: 18%;
+  margin-left: 20%;
 }
 
 .logo {
@@ -104,4 +104,14 @@ a {
 
 .ant-form-item .ant-btn-primary {
   background: linear-gradient(45deg, rgb(255, 81, 0), #9f1bfa) !important;
+}
+
+.regist-gender {
+  color: #9f1bfa;
+}
+
+.regist-button {
+  width: 50%;
+  margin-left: 50%;
+  transform: translateX(-50%);
 }

@@ -1,5 +1,6 @@
 .plane-wrapper {
   margin: 0 auto;
+  margin-left: 22%;
   width: 60%;
   padding: 1rem 0;
   /* background-color: #fff; */
@@ -20,7 +21,9 @@
   /* font-weight: 700; */
   text-align: center;
   font-size: 1rem;
-  width: 9.77rem;
+  width: 9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .air-small-banner {
@@ -34,10 +37,11 @@
 }
 
 .air-pannel {
+  position: relative;
   /* display: flex; */
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem 3rem;
+  padding: 0 2rem 2rem;
   margin-top: 1rem;
 }
 
@@ -59,7 +63,7 @@
 }
 
 .air-citypicker {
-  width: 18rem;
+  width: 15rem;
 }
 
 .air-citypicker .ant-select-selector {
@@ -92,6 +96,7 @@
 }
 
 .air-cities {
+  margin-right: 1rem;
   width: fit-content;
   position: relative;
   border-radius: 1rem;
@@ -111,4 +116,102 @@
 .air-change svg {
   margin-top: -0.3rem !important;
   color: #bd67e6;
+}
+
+.air-row-2 {
+  display: flex;
+  align-items: center;
+}
+
+.air-heads {
+  font-size: 1rem;
+  margin-right: 0.2rem;
+}
+
+.air-range {
+  margin-right: 1rem;
+}
+
+.air-range.ant-picker-range {
+  height: 3.5rem !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid #eee !important;
+}
+
+.air-range .ant-picker-input input {
+  text-align: center !important;
+}
+
+.air-seperator {
+  position: relative;
+  width: 2.5rem;
+  height: 1.5rem;
+  background-color: #e7a6ff;
+  text-align: center;
+  border-radius: 10rem;
+  line-height: 1.5rem;
+  color: white;
+  z-index: 1;
+}
+
+/* .air-seperator::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: -62%;
+  width: 1px;
+  height: 3.5rem;
+  background-color: #ccc;
+  z-index: -1;
+} */
+
+.air-people {
+  width: 15rem;
+  height: 3.5rem !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid #eee !important;
+  background-color: #fff;
+}
+
+.air-title {
+  padding-left: 1rem;
+  margin-top: 0.1rem;
+  color: grey;
+}
+
+.air-people-but {
+  width: 14.9rem;
+  border-radius: 0 0 1rem 1rem;
+  border: 1px #eee solid;
+  border-top: none;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+.air-book {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 15rem;
+  height: 4rem;
+  background: linear-gradient(45deg, rgb(255, 81, 0), #9f1bfa);
+  color: white;
+  font-size: 1.6rem;
+  line-height: 2rem;
+  border-radius: 100rem;
+  transform: translate(-50%, 50%);
+  border: 3px solid white;
+}
+
+.air-book.ant-btn:hover {
+  color: white;
+  border: 3px solid white;
+}
+
+.air-small-banner .slick-dots {
+  right: -1rem !important;
+  bottom: 1rem !important;
 }

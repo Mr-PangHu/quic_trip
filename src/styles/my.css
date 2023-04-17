@@ -1,0 +1,24 @@
+.my-wrapper {
+  margin: 0 auto;
+  margin-left: 22%;
+  width: 60%;
+  padding: 1rem 0;
+}
+
+.my-wrapper .ant-card-head-title {
+  color: #9f1bfa !important;
+}
+
+.my-wrapper .my-card {
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 16px rgba(69, 88, 115, 0.1);
+}
+
+.my-wrapper .my-card p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.my-bald {
+  font-weight: 700;
+}

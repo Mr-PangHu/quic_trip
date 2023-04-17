@@ -9,6 +9,7 @@ import Boat from "./boat";
 import Train from "./train";
 import Trip from "./trip";
 import Normal from "./normal";
+import MyBook from "./mybook";
 import { useEffect, useState } from "react";
 
 // 测试用主页面布局样式
@@ -38,7 +39,7 @@ const footerStyle = {
 export default function Home() {
   const [collapsed, setCollapsed] = useState(false);
   // 记录content部分的导航标签
-  const [route, setRoute] = useState("Plane");
+  const [route, setRoute] = useState("Inn");
 
   var content = <Inn></Inn>;
 
@@ -47,6 +48,7 @@ export default function Home() {
   else if (route == "Boat") content = <Boat></Boat>;
   else if (route == "Plane") content = <Plane></Plane>;
   else if (route == "Trip") content = <Trip></Trip>;
+  else if (route == "My") content = <MyBook></MyBook>;
   else content = <Normal></Normal>;
 
   return (
@@ -68,7 +70,7 @@ export default function Home() {
         </Sider>
         <Layout>
           <Header style={headerStyle}>
-            <Toper></Toper>
+            <Toper setRoute={setRoute}></Toper>
           </Header>
           <Content style={contentStyle}>{content}</Content>
           <Footer style={footerStyle}>

@@ -170,7 +170,7 @@ export default function Info() {
         </div>
       </div>
       {/* 下部文字 */}
-      <div style={{ textAlign: "center", color: "#bbb" }}>
+      <div style={{ textAlign: "center", color: "#bbb", marginLeft: "5%" }}>
         <p>
           <a>Copyright©1999-2023, ctrip.com. All rights reserved.</a> |
           <a> ICP证：沪B2-20050130</a> | <a>沪ICP备08023580号-3</a>
@@ -198,6 +198,7 @@ export default function Info() {
           display: "flex",
           marginTop: "0.5rem",
           justifyContent: "center",
+          marginLeft: "5%",
         }}
       >
         <a>
