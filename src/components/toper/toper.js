@@ -3,8 +3,11 @@ import { createFromIconfontCN } from "@ant-design/icons";
 import { DownOutlined, RightOutlined } from "@ant-design/icons";
 import { Dropdown, Space, Popover } from "antd";
 import { QRCode } from "antd";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Login from "./login";
+
+import { ValueContext } from '../../pages/_app';
+
 import dynamic from 'next/dynamic';
 const ChatPage = dynamic(() => import('../chat'), { ssr: false });
 
@@ -22,7 +25,7 @@ const items = [
   },
 ];
 
-export default function Toper() {
+export default function Toper(props) {
   const [api, contextHolder] = notification.useNotification();
   // 登录弹窗状态
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,11 +52,14 @@ export default function Toper() {
     setIsModalOpen(false);
   };
 
-  const [isShow,setisShow] = useState(false)
+  const [isShowChat, setisShowChat] = useState(false)
+
+  const { isShow, setisShow } = useContext(ValueContext);
 
   return (
     <div className="wrapper">
-      {isShow ? <ChatPage /> : null}
+      {isShowChat ? <ChatPage /> : null}
+
       <img src="./logo.png" className="logo" />
       {contextHolder}
       <Search
@@ -117,7 +123,7 @@ export default function Toper() {
         }}
       >
         <Popover
-          onClick={() => setisShow(!isShow)}
+          onClick={() => setisShowChat(!isShowChat)}
           content={
             <div>
               <p>客服机器人小Q</p>
@@ -184,6 +190,7 @@ export default function Toper() {
         }}
       >
         <Popover
+          onClick={() => setisShow(!isShow)}
           content={
             <div>
               <p>无障碍模式</p>
