@@ -4,6 +4,7 @@ import { Radio, Checkbox, Select, Popover, InputNumber } from "antd";
 import { CheckOutlined, SwapOutlined } from "@ant-design/icons";
 import { createFromIconfontCN } from "@ant-design/icons";
 import { use, useState } from "react";
+import axios from "axios";
 import CityPicker from "../common/CityPicker";
 import moment from "moment";
 import dayjs from "dayjs";
@@ -15,7 +16,7 @@ const IconFont = createFromIconfontCN({
   scriptUrl: "//at.alicdn.com/t/c/font_4006149_h0exp2flkq5.js",
 });
 
-export default function PlaneBooker() {
+export default function PlaneBooker(props) {
   // 设置出发和到达城市
   const [start, setStart] = useState([]);
   const [end, setEnd] = useState([]);
@@ -41,6 +42,8 @@ export default function PlaneBooker() {
   const getDays = (value) => {
     // if (value) console.log(value[0].unix(), value[1].unix());
     if (value)
+      setStartDate(value[0].format("YYYY-MM-DD"))
+      setEndDate(value[1].format("YYYY-MM-DD"))
       setDay(
         moment(value[1].format("YYYY-MM-DD")).diff(
           value[0].format("YYYY-MM-DD"),
@@ -48,23 +51,64 @@ export default function PlaneBooker() {
         )
       );
   };
+  const [Triptype, setTriptype] = useState('')
+  const handleTriptype = (e) => {
+    if (e.target.value === 1) {
+      setTriptype('单程')
+    } else if (e.target.value === 2) {
+      setTriptype('往返')
+    } else {
+      setTriptype('多程（含缺口程）')
+    }
+  }
+  const [Zhifei, setZhifei] = useState(false)
+  const handleZhifei = (e) => {
+    setZhifei(e.target.checked)
+  }
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const BookPlane = async () => {
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken) {
+      axios.post("http://localhost:3000/api/mock/bookplane", {
+        token: storedToken,
+        id: new Date().getTime(),
+        StartPlace: start[2],
+        EndPlace: end[2],
+        Triptype: Triptype,
+        Zhifei: Zhifei ? '是' : '否',
+        Type: type,
+        StartDate: startDate,
+        EndDate: endDate,
+        AdultCount: adult,
+        ChildCount: child,
+        EnfantCount: enfant
+      }).then(res => {
+        console.log(res.data.message)
+      }).catch(err => {
+        console.log('操作失败' + err)
+      })
+    } else {
+      alert('请先登录')
+    }
+  }
 
   return (
-    <div>
+    <div className={props.dark ? "dark-plane" : null}>
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "#9f1bfa",
+            colorPrimary: props.dark ? "#3d1155" : "#9f1bfa",
           },
           components: {
             Tabs: {
-              colorBgContainer: "white",
+              colorBgContainer: props.dark ? "#505050" : "white",
               colorText: "white",
               lineWidth: 1,
-              colorPrimary: "#000",
+              colorPrimary: props.dark ? "#fff" : "#000",
               colorBorderSecondary: "rgba(0, 0, 0, 0)",
               colorBorder: "",
-              colorFillAlter: "#6d0099",
+              colorFillAlter: props.dark ? "#3d1155" : "#6d0099",
               colorTextHeading: "rgba(0, 0, 0, 0.88)",
               colorPrimaryHover: "#ccc",
               colorPrimaryActive: "#555",
@@ -81,7 +125,6 @@ export default function PlaneBooker() {
               key: "国内、国际/中国港澳台",
               children: (
                 <div className="air-pannel">
-                  // 表单组
                   <div
                     style={{
                       display: "flex",
@@ -92,7 +135,7 @@ export default function PlaneBooker() {
                   >
                     {/* 单选框 */}
                     <div>
-                      <Radio.Group className="air-radio">
+                      <Radio.Group className="air-radio" onChange={handleTriptype}>
                         <Radio value={1}>单程</Radio>
                         <Radio value={2}>往返</Radio>
                         <Radio value={3}>多程（含缺口程）</Radio>
@@ -101,7 +144,7 @@ export default function PlaneBooker() {
 
                     {/* 下拉菜单 */}
                     <div>
-                      <Checkbox>仅看直飞</Checkbox>
+                      <Checkbox onChange={handleZhifei}>仅看直飞</Checkbox>
                       <Select
                         bordered={false}
                         defaultValue="经济/超经舱"
@@ -340,8 +383,7 @@ export default function PlaneBooker() {
                       </Popover>
                     </div>
                   </div>
-                  // 订购按钮
-                  <Button className="air-book">订购</Button>
+                  <Button className="air-book" onClick={BookPlane}>订购</Button>
                 </div>
               ),
             },

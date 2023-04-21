@@ -77,31 +77,35 @@ export default function Booker() {
   // 备注
   const [description, setDescription] = useState("");
 
-  const showPrice = async (e) => {
-    // const { data } = await axios.get("http://localhost:3000/api/mock/showPrice")
-    // const level = e
-    // level.forEach(item => {
-    //   const hotel = data.hotel.filter(h => h.name == item[0])
-    //   console.log(hotel[0].price)
-    // })
-    
-    axios.get("http://localhost:80/dbapi/hoteladd", {
-      params: {
-        hotelName: position[2],
-        hotelLevel: level[0][0],
-        checkinTime: checkinTime,
-        checkoutTime: checkoutTime,
-        roomNumber: roomNum,
-        adultNumber: adult,
-        childNumber: child,
+  const [form1] = Form.useForm()
+  const [form2] = Form.useForm()
+
+  const BookHotel = async (e) => {
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken) {
+      axios.post("http://localhost:3000/api/mock/bookhotel", {
+        token: storedToken,
+        id: new Date().getTime(),
+        destination: position[2],
+        HotelLevel: level[0][0],
+        checkinDate: checkinTime,
+        checkoutDate: checkoutTime,
+        RoomCount: roomNum,
+        AdultCount: adult,
+        ChildCount: child,
         description: description
-      }
-    }).then(res => {
-      console.log(res.data)
-    }).catch(err => {
-      console.log('操作失败' + err)
-    })
-    console.log(position[2],level[0][0],checkinTime,checkoutTime,roomNum,adult,child,description)
+      }).then(res => {
+        console.log(res.data.message)
+        form1.resetFields()
+        form2.resetFields()
+      }).catch(err => {
+        console.log('操作失败' + err)
+      })
+    } else {
+      alert('请先登录')
+    }
+    // form2.resetFields()
+    // console.log(position[2],level[0][0],checkinTime,checkoutTime,roomNum,adult,child,description)
   }
 
 
@@ -113,7 +117,7 @@ export default function Booker() {
         <h5>Book Rooms</h5>
         {/* 下面的表单项 */}
         <div className="inn-box-forms">
-          <Form style={{ height: "5rem" }}>
+          <Form style={{ height: "5rem" }} form={form1}>
             <Space.Compact>
               {/* 城市选择器 */}
               <Form.Item
@@ -156,7 +160,7 @@ export default function Booker() {
             </Space.Compact>
           </Form>
 
-          <Form style={{ display: "flex", marginTop: "1.5rem" }}>
+          <Form style={{ display: "flex", marginTop: "1.5rem" }} form={form2}>
             <Space.Compact
               style={{
                 flex: "8",
@@ -282,7 +286,7 @@ export default function Booker() {
               size="large"
               style={{ flex: "2", fontSize: "1.5rem", height: "5rem" }}
               className="inn-search"
-              onClick={showPrice} /////////////////////////
+              onClick={BookHotel} /////////////////////////
             >
               预订
             </Button>

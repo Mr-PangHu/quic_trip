@@ -5,6 +5,7 @@ import { createFromIconfontCN } from "@ant-design/icons";
 import { Space } from "antd";
 import CityPicker from "@/components/common/CityPicker";
 import locale from "antd/locale/zh_CN";
+import axios from "axios";
 import "dayjs/locale/zh-cn";
 import moment from "moment";
 import { useState } from "react";
@@ -14,15 +15,37 @@ const IconFont = createFromIconfontCN({
 });
 
 export default function BoatBooker(props) {
-  const [busCity, setBusCity] = useState([]);
-  const [boatCity, setBoatCity] = useState([]);
+  const [StartCity, setStartCity] = useState([]);
+  const [EndCity, setEndCity] = useState([]);
   // 交换上下两个值
   const handelExchange = () => {
-    console.log(busCity, boatCity);
-    let tmp = [...busCity];
-    setBusCity([...boatCity]);
-    setBoatCity([...tmp]);
+    // console.log(busCity, boatCity);
+    let tmp = [...StartCity];
+    setStartCity([...EndCity]);
+    setEndCity([...tmp]);
   };
+  const [startDate, setStartDate] = useState('')
+  const [BusOrBoat, setBusOrBoat] = useState('汽车票订购')
+  const BookBus = async () => {
+    // console.log(StartCity,EndCity,startDate,BusOrBoat)
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken) {
+      axios.post("http://localhost:3000/api/mock/bookbusorboat", {
+        token: storedToken,
+        id: new Date().getTime(),
+        StartPlace: StartCity[2],
+        EndPlace: EndCity[2],
+        StartDate: startDate,
+        BusOrBoat: BusOrBoat
+      }).then(res => {
+        console.log(res.data.message)
+      }).catch(err => {
+        console.log('操作失败' + err)
+      })
+    } else {
+      alert('请先登录')
+    }
+  }
   return (
     <ConfigProvider
       theme={{
@@ -40,11 +63,12 @@ export default function BoatBooker(props) {
       }}
     >
       <Tabs
+        onChange={(val) => setBusOrBoat(val)}
         type="card"
         items={[
           {
-            label: "汽车票查询",
-            key: "汽车票查询",
+            label: "汽车票订购",
+            key: "汽车票订购",
             // 汽车票面板
             children: (
               <div className="ticket bus">
@@ -56,8 +80,8 @@ export default function BoatBooker(props) {
                   >
                     <CityPicker
                       chinaOnly={true}
-                      setFunc={setBusCity}
-                      val={busCity}
+                      setFunc={setStartCity}
+                      val={StartCity}
                     ></CityPicker>
                   </Form.Item>
                   <Button
@@ -81,8 +105,8 @@ export default function BoatBooker(props) {
                   >
                     <CityPicker
                       chinaOnly={true}
-                      setFunc={setBoatCity}
-                      val={boatCity}
+                      setFunc={setEndCity}
+                      val={EndCity}
                     ></CityPicker>
                   </Form.Item>
                   <Form.Item
@@ -92,6 +116,7 @@ export default function BoatBooker(props) {
                   >
                     <ConfigProvider locale={locale}>
                       <DatePicker
+                        onChange={(val) => setStartDate(val.format("YYYY-MM-DD"))}
                         disabledDate={(current) => {
                           return current < moment().startOf("day");
                         }}
@@ -115,6 +140,7 @@ export default function BoatBooker(props) {
                       style={{ fontSize: "1.6rem" }}
                     ></IconFont>
                   }
+                  onClick={BookBus}
                 >
                   订购
                 </Button>
@@ -122,11 +148,11 @@ export default function BoatBooker(props) {
             ),
           },
           {
-            label: "船票查询",
-            key: "船票查询",
+            label: "船票订购",
+            key: "船票订购",
             // 船票面板
             children: (
-              <div className="ticket bus">
+              <div className="ticket bus boat">
                 <Form style={{ position: "relative" }}>
                   <Form.Item
                     colon={false}
@@ -135,8 +161,8 @@ export default function BoatBooker(props) {
                   >
                     <CityPicker
                       chinaOnly={true}
-                      setFunc={setBusCity}
-                      val={busCity}
+                      setFunc={setStartCity}
+                      val={StartCity}
                     ></CityPicker>
                   </Form.Item>
                   <Form.Item
@@ -146,8 +172,8 @@ export default function BoatBooker(props) {
                   >
                     <CityPicker
                       chinaOnly={true}
-                      setFunc={setBoatCity}
-                      val={boatCity}
+                      setFunc={setEndCity}
+                      val={EndCity}
                     ></CityPicker>
                   </Form.Item>
                   <Form.Item
@@ -157,6 +183,7 @@ export default function BoatBooker(props) {
                   >
                     <ConfigProvider locale={locale}>
                       <DatePicker
+                        onChange={(val) => setStartDate(val.format("YYYY-MM-DD"))}
                         disabledDate={(current) => {
                           return current < moment().startOf("day");
                         }}
@@ -180,6 +207,7 @@ export default function BoatBooker(props) {
                       style={{ fontSize: "1.6rem" }}
                     ></IconFont>
                   }
+                  onClick={BookBus}
                 >
                   订购
                 </Button>

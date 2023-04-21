@@ -1,12 +1,45 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { Modal, Tabs } from "antd";
-import { Button, Checkbox, Form, Input, Space } from "antd";
+import { Button, Checkbox, Form, Input, Space, Alert } from "antd";
 import { QRCode } from "antd";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-function userNameAndPassword() {
+function userNameAndPassword(props) {
+  const [LoginForm] = Form.useForm();
+  const [rememberMe, setRememberMe] = useState(false);
+  const handleLogin = async () => {
+    axios.post("http://localhost:3000/api/mock/login",{
+      username: LoginForm.getFieldValue('username'),
+      password: LoginForm.getFieldValue('password'),
+      rememberMe: rememberMe
+    }).then(res => {
+      if (res.data.status === 200) {
+        alert('登录成功')
+        if (rememberMe) {
+          localStorage.setItem("authToken", res.data.token);
+        }
+        setRememberMe(false)
+        props.handleCancel()
+      } else if (res.data.status === 203) {
+        alert('用户不存在')
+        LoginForm.resetFields()
+      } else if (res.data.status === 202) {
+        alert('密码错误')
+        LoginForm.resetFields()
+      }
+      LoginForm.resetFields()
+    }).catch(err => {
+        console.log('操作失败' + err)
+    })
+  }
+
+  
   // 用户名密码登录样式
   return (
     <div>
       <Form
+        form={LoginForm}
         name="username"
         labelCol={{
           span: 6,
@@ -40,11 +73,13 @@ function userNameAndPassword() {
         </Form.Item>
 
         <Form.Item name="remember">
-          <Checkbox style={{ marginLeft: "3rem" }}>记住我</Checkbox>
+          <Checkbox style={{ marginLeft: "3rem" }} checked={rememberMe} onChange={() => setRememberMe(!rememberMe)}>记住我</Checkbox>
         </Form.Item>
 
         <Form.Item style={{ textAlign: "center" }}>
           <Button
+            onClick={handleLogin}
+            size="large"
             type="primary"
             htmlType="submit"
             style={{ width: "80%", height: "rem", fontSize: "1rem" }}
@@ -119,8 +154,22 @@ function Phone() {
 }
 
 export default function Login(props) {
-  const uname = userNameAndPassword();
+  const uname = userNameAndPassword(props);
   const phone = Phone();
+  
+  useEffect(() => {
+    const storedToken = localStorage.getItem("authToken");
+    if (storedToken) {
+      axios.post("http://localhost:3000/api/mock/user",{token: storedToken})
+      .then(res => {
+        if (res.data.status === 200) {
+          console.log(res.data.data)
+        }
+      }).catch(err => {
+        console.error(err)
+      });
+      }
+  }, []);
   return (
     <Modal
       title={null}

@@ -47,6 +47,16 @@ a {
   border-radius: 10rem;
   background-color: #f4e7ff;
   color: #ba54ff;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.login-inner {
+  width: 3rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .login:hover,

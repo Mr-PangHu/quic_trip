@@ -4,8 +4,36 @@ import {
   WomanOutlined,
   QuestionOutlined,
 } from "@ant-design/icons";
+import axios from "axios";
+
+const { Option } = Select;
+
 
 export default function Regist(props) {
+  const [RegisterForm] = Form.useForm();
+  const handelRegister = async () => {
+    axios.post("http://localhost:3000/api/mock/register",{
+      id: new Date().getTime(),
+      username: RegisterForm.getFieldValue('用户名'),
+      gender: RegisterForm.getFieldValue('性别'),
+      email_address: RegisterForm.getFieldValue('邮箱'),
+      trip_declaration: RegisterForm.getFieldValue('旅行宣言'),
+      password: RegisterForm.getFieldValue('密码')
+    }).then(res => {
+      // console.log(res)
+      if (res.data.status === 200) {
+        alert('注册成功')
+        props.handleCancel()
+      } else if (res.data.status === 202) {
+        alert('用户名已存在')
+        RegisterForm.resetFields()
+      }
+      RegisterForm.resetFields()
+    }).catch(err => {
+        console.log('操作失败' + err)
+    })
+  }
+
   return (
     <div>
       <Modal
@@ -16,7 +44,7 @@ export default function Regist(props) {
         centered
         footer={null}
       >
-        <Form
+        <Form form={RegisterForm}
           labelCol={{
             span: 5,
           }}
@@ -48,7 +76,7 @@ export default function Regist(props) {
               },
             ]}
           >
-            <Select placeholder="select your gender">
+            <Select placeholder="请选择性别">
               <Option value="男">
                 <ManOutlined className="regist-gender"></ManOutlined> 男
               </Option>
@@ -135,7 +163,7 @@ export default function Regist(props) {
           </Form.Item>
         </Form>
         {/* 注册按钮 */}
-        <Button className="regist-button" type="primary" size="large">
+        <Button className="regist-button" type="primary" size="large" onClick={handelRegister}>
           注册
         </Button>
       </Modal>

@@ -1,10 +1,12 @@
-import { Input, notification } from "antd";
+import { Input, notification, Button } from "antd";
 import { createFromIconfontCN } from "@ant-design/icons";
 import { DownOutlined, RightOutlined } from "@ant-design/icons";
 import { Dropdown, Space, Popover } from "antd";
 import { QRCode } from "antd";
 import { useState, useContext } from "react";
 import Login from "./login";
+import Regist from "./regist";
+import Link from "next/link";
 
 import { ValueContext } from '../../pages/_app';
 
@@ -26,9 +28,20 @@ const items = [
 ];
 
 export default function Toper(props) {
+  const items = [
+    {
+      label: <Link href="/mybook">查看订单</Link>,
+      key: "0",
+    },
+  ];
   const [api, contextHolder] = notification.useNotification();
   // 登录弹窗状态
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // 注册窗状态
+  const [registOpen, setRegistOpen] = useState(false);
+  
+  // const [storedToken,setstoredToken] = useState(token);
 
   const openNotification = () => {
     api.open({
@@ -42,6 +55,14 @@ export default function Toper(props) {
   const handleLogin = () => {
     setIsModalOpen(true);
   };
+
+  // 处理退出登录
+  const handleExit = () => {
+    setToken(null);
+    localStorage.removeItem("authToken");
+    // 自动跳回首页
+    Router.push("/");
+  };
   // 弹窗取消按钮操作
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -52,9 +73,23 @@ export default function Toper(props) {
     setIsModalOpen(false);
   };
 
+  // 注册按钮点击事件
+  const handleRegist = () => {
+    setRegistOpen(true);
+  };
+  // 注册窗口确认事件
+  const registOk = () => {
+    setRegistOpen(false);
+  };
+
+  // 注册窗口取消事件
+  const registCancel = () => {
+    setRegistOpen(false);
+  };
+
   const [isShowChat, setisShowChat] = useState(false)
 
-  const { isShow, setisShow } = useContext(ValueContext);
+  const { isShow, setisShow, token, setToken } = useContext(ValueContext);
 
   return (
     <div className="wrapper">
@@ -77,23 +112,49 @@ export default function Toper(props) {
           paddingRight: "0.5rem",
         }}
       >
-        <a className="login" onClick={handleLogin}>
-          <IconFont
-            type="icon-avatar"
-            style={{
-              fontSize: "1.8rem",
-              marginLeft: "-0.5rem",
-              marginRight: "0.5rem",
-            }}
-          />
-          请登录
-        </a>
-        <a className="regist">注册</a>
+        {token ? (
+          <Popover
+            placement="bottom"
+            title={null}
+            content={<Button onClick={handleExit}>退出登录</Button>}
+            trigger="hover"
+          >
+            <a className="login">
+              <IconFont
+                type="icon-avatar"
+                style={{
+                  fontSize: "1.8rem",
+                  marginLeft: "-0.5rem",
+                  marginRight: "0.5rem",
+                }}
+              />
+              <span className="login-inner">{token.split('-')[0]}</span>
+            </a>
+          </Popover>
+        ) : (
+          <a className="login" onClick={handleLogin}>
+            <IconFont
+              type="icon-avatar"
+              style={{
+                fontSize: "1.8rem",
+                marginLeft: "-0.5rem",
+                marginRight: "0.5rem",
+              }}
+            />
+            <span className="login-inner">请登录</span>
+          </a>
+        )}
+        <a className="regist" onClick={handleRegist}>注册</a>
         <Login
           isModalOpen={isModalOpen}
           handleCancel={handleCancel}
           handleOk={handleOk}
         ></Login>
+        <Regist
+          isModalOpen={registOpen}
+          handleCancel={registCancel}
+          handleOk={registOk}
+        ></Regist>
         {/* 下拉菜单 */}
         <div style={{ width: "6.5rem" }}>
           <Dropdown menu={{ items }}>

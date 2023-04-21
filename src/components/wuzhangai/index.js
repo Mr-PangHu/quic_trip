@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { PlusCircleOutlined, MinusCircleOutlined, DragOutlined, FullscreenOutlined, BgColorsOutlined, UndoOutlined, CloseCircleOutlined} from '@ant-design/icons';
 import { Button, Space, Tooltip } from 'antd';
 
@@ -12,9 +12,17 @@ export default function Wuzhangai(props) {
   const handleHighcontrast = () => {
     props.filtervalue == 'none' ? props.Filter('invert(100%)') : props.Filter('none')
   }
-  const handleReset = () => props.Reset(1.0);
+  const handleReset = () => {
+    props.Filter('none')
+    props.bigCursor('auto')
+    props.showLines(false)
+    props.Reset(1.0)};
 
-  const handleClose = () => props.Isshow(!props.isshowvalue)
+  const handleClose = () => {
+    handleReset()
+    props.Isshow(!props.isshowvalue)
+  }
+
   
   return (
     <div style={{

@@ -53,8 +53,17 @@ useEffect(() => {
 
   return () => {
     window.removeEventListener('mousemove', handleMouseMove);
-
   };
+}, []);
+
+// 处理登录时的token状态和函数
+const [token, setToken] = useState(null);
+// 根组件刷新时查看本地是否存了token，存了则取出token
+useEffect(() => {
+  let t = localStorage.getItem("authToken");
+  if (t) {
+    setToken(t);
+  }
 }, []);
   return (
     <div style={{cursor: bigcursor}}>
@@ -77,7 +86,7 @@ useEffect(() => {
           <div className="horizon-line" style={{ top: yPos,position: 'absolute',left: 0,width: '100%',height: 5,backgroundColor: 'red',zIndex: 100}}></div>
         </div>
       <div style={{zoom: zoom, filter: filter}}>
-       <ValueContext.Provider value={{ isShow, setisShow }}>
+       <ValueContext.Provider value={{ isShow, setisShow, token, setToken, bigcursor, setBigcursor, showLines, setShowLines, filter, setFilter}}>
         <Component {...pageProps} />
        </ValueContext.Provider>
       </div>
